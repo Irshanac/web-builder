@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styles from "./registration.module.css";
 import { useRouter } from 'next/router';
-export default function ResetPassword() {
+export default function resetPassword() {
     const [formData, setFormData] = useState({
         password: '',
         Cpassword: ''
@@ -61,41 +61,32 @@ export default function ResetPassword() {
       
       return (
         <div className={styles.bods}>
-          <div className={styles.login_container}>
-            <form className={styles.login_form} onSubmit={handleSubmit}>
+        <div className={styles.login_container}>
+          <form className={styles.login_form} onSubmit={handleSubmit}>
+          <a href="#" className={styles.back_arrow} onClick={() => router.push('/')}>
+              ←
+            </a>
+            <h2>Forget Password</h2>
+           
+            <div className={styles.form_group}>
+              <label className={styles.ladels} htmlFor="email">
+                Email:
+              </label>
+              <input 
+                type="email" 
+                id="email" 
+                name="email" 
+                value={formData.email}
+                onChange={handleChange}
+                onFocus={() => handleFocus("email")}
+              />
+              {errors.email && <span className={styles.error}>{errors.email}</span>}
+            </div>
+          
             
-              <h2>Reset your password</h2>
-              <div className={styles.form_group}>
-                <label className={styles.ladels} htmlFor="password">
-                  Password:
-                </label>
-                <input 
-                  type="password" 
-                  id="password" 
-                  name="password" 
-                  value={formData.password}
-                  onChange={handleChange}
-                  onFocus={() => handleFocus("password")}
-                />
-               {errors.password && <span className={styles.error}>{errors.password}</span>}
-              </div>
-              <div className={styles.form_group}>
-                <label className={styles.ladels} htmlFor="Cpassword">
-                  Confirm Password:
-                </label>
-                <input 
-                  type="password" 
-                  id="Cpassword" 
-                  name="Cpassword" 
-                  value={formData.Cpassword}
-                  onChange={handleChange}
-                  onFocus={() => handleFocus("Cpassword")}
-                />
-                {errors.Cpassword && <span className={styles.error}>{errors.Cpassword}</span>}
-              </div>
-              <button className={styles.buttons} type="submit">Reset Password</button>
-            </form>
-          </div>
+            <button className={styles.buttons} type="submit">Submit</button>
+          </form>
         </div>
+      </div>
   )
 }

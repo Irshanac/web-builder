@@ -85,18 +85,16 @@ export default function Registration() {
       setErrors(errors);
     }
     setisSubmit(true)
-    console.log("before API")
     if(Object.keys(setErrors).length==0 && isSubmit==true)
     {
       console.log(formData)
-      axios.post("http://localhost:5000/user/register",formData).then((Response)=>{
+      axios.post("http://localhost:5000/user/register",userData).then((Response)=>{
         console.log(Response);
         toast.success("Registration comp")
         router.push("/")
 
       }).catch((error)=>{
         toast.error(error)
-        console.log(error)
       })
     }
   };
