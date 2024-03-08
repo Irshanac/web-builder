@@ -1,17 +1,4 @@
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 import styled from 'styled-components';
 import React, { useEffect, useState, useContext } from "react";
 import History from './History';

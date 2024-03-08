@@ -61,6 +61,9 @@ export default function Registration() {
       <input type="text" placeholder="Enter your name" required="" />
     </div>
     <div className={styles.input_box}>
+      <input type="text" placeholder="Enter your username" required="" />
+    </div>
+    <div className={styles.input_box}>
       <input type="text" placeholder="Enter your email" required="" />
     </div>
     <div className={styles.input_box}>

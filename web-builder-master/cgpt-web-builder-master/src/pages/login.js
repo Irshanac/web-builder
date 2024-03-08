@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from "react";
+import React, { useState } from "react";
 import { toast } from 'react-hot-toast';
 import styles from "./registration.module.css";
 import { useRouter } from 'next/router';
@@ -40,6 +40,7 @@ export default function Login() {
     if (!formData.password.trim()) {
       errors.password = "Password is required";
     }
+    console.log("Errors:", errors);
     if (Object.keys(errors).length === 0) {
       console.log("Form data:", formData);
     } else {
@@ -48,7 +49,7 @@ export default function Login() {
     }
     setisSubmit(true);
     console.log("before API")
-    if(Object.keys(errors).length==0 && isSubmit==false)
+    if(Object.keys(setErrors).length==0 && isSubmit==false)
     {
       console.log(formData)
       axios.post("http://localhost:5000/user/login",formData).then((Response)=>{
@@ -59,9 +60,7 @@ export default function Login() {
        localStorage.setItem("userData", JSON.stringify(Response.data.datas));
         console.log(localStorage.getItem("userData"))
         toast.success("Login successful");
-        console.log("before router");
         router.push("/webBuilder")
-        
       }).catch((error)=>{
         toast.success(error)
         console.log(error)
