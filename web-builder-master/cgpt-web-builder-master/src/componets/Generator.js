@@ -1,92 +1,68 @@
+import styles from "./error.module.css";
+import styled from "styled-components";
+import React, { useEffect, useState } from "react";
+import History from "./History";
 
+const Generator = () => {
+  const [errors, setErrors] = useState({});
+  const [description, setDescription] = useState({ query: "" });
+  const [history, setHistory] = useState([]);
+  const [movedHistory, setMovedHistory] = useState("");
+  const [load, setLoad] = useState("");
 
-
-
-
-
-
-
-
-
-
-
-
-
-import styled from 'styled-components';
-import React, { useEffect, useState, useContext } from "react";
-import History from './History';
-
-const API_KEY = process.env.NEXT_PUBLIC_OPENAI_API_KEY;
-
-const Generator = (props) => {
-  const [description,setdescription] = useState({})
-  const [history,setHistory] = useState([])
-  const [movedHistory, setMovedHistory] = useState('');
-  const [load, setLoad] = useState('');
   useEffect(() => {
     const collectHistory = localStorage.getItem("storeHistory");
     setHistory(collectHistory ? JSON.parse(collectHistory) : []);
   }, []);
- 
 
-  //store descrpion
+  const handleFocus = () => {
+    // Clear the error message
+    setErrors({});
+  };
+
   const store = (e) => {
-      const {name,value} = e.target
-      setdescription({[name]:value})
-  }
-console.log('qqq',description);
-//
-const handleMovedHistory = (movedHistoryValue) => {
-  setMovedHistory(movedHistoryValue);
-    const names='query'
-    const values={'query':movedHistoryValue}
-    console.log('hhhhhhhhh',movedHistory);
-    setdescription(values)
-};
-// const newDescription= (e)=>
-//   {
-//     const newdesp=e.target.value
-//     setdescription(newdesp)
-//   }
-  //description store history
+    const { name, value } = e.target;
+    setDescription({ ...description, [name]: value });
+  };
+
+  const handleMovedHistory = (movedHistoryValue) => {
+    setMovedHistory(movedHistoryValue);
+    setDescription({ query: movedHistoryValue });
+  };
+
   const printDescription = () => {
-    if (description && description.query) {
-      setHistory([...history, description]);
-      console.log(description);
-      localStorage.setItem(
-        "storeHistory",
-        JSON.stringify([...history, description])
-      );
-      setLoad(description);
-     setdescription('');
-     //setHistory([]); // Uncomment if you want to clear the entire history
+    const newErrors = {};
+    if (!description.query) {
+      newErrors.query = "Description is required";
+    } else if (description.query.length < 15) {
+      newErrors.query = "Description must be at least 15 characters";
     }
-    // Optionally, you can add an else block for handling the case when description is falsy
-  }
-  
 
-
-  //Get history
- /* const [passHistory,setpassHistory] = useState(props.passDescription)*/
+    if (Object.keys(newErrors).length === 0) {
+      setHistory([...history, description]);
+      localStorage.setItem("storeHistory", JSON.stringify([...history, description]));
+      setLoad(description);
+      setDescription({ query: "" });
+    } else {
+      setErrors(newErrors);
+    }
+  };
 
   return (
     <Container>
-     <Textarea
+      <Textarea
         placeholder="Write what you want to build"
-        onChange={(e) => store(e)} // Pass the event to store
+        onChange={store}
         name="query"
-        id="desp"
+        id="query"
         value={description.query}
-      ></Textarea>
+        onFocus={handleFocus}
+      ></Textarea><br></br>
+      {errors.query && <span className={styles.error}>{errors.query}</span>}
       <ButtonGroup>
-       
-          <button onClick={printDescription} >Generate</button>
-       
+        <button onClick={printDescription}>Generate</button>
       </ButtonGroup>
       <History setHistory={setHistory} onMoveHistory={handleMovedHistory} reload={load} />
-
-
-      
     </Container>
   );
 };
@@ -105,7 +81,7 @@ const Textarea = styled.textarea`
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
   resize: none;
   font-size: 20px;
-  font-family: 'Arial', sans-serif;
+  font-family: "Arial", sans-serif;
   width: -webkit-fill-available;
 
   &:focus {
@@ -129,7 +105,7 @@ const ButtonGroup = styled.div`
     color: #ffff;
     cursor: pointer;
     font-size: 16px;
-    font-family: 'Arial', sans-serif;
+    font-family: "Arial", sans-serif;
     margin: 0px 5px;
     padding: 10px 20px;
     transition: all 0.2s ease-in-out;
