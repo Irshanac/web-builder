@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { toast } from 'react-hot-toast';
+import React, { useState,useEffect } from "react";
+import toast, { Toaster } from 'react-hot-toast';
 import styles from "./registration.module.css";
 import { useRouter } from 'next/router';
 import axios from "axios";
@@ -40,16 +40,9 @@ export default function Login() {
     if (!formData.password.trim()) {
       errors.password = "Password is required";
     }
-    console.log("Errors:", errors);
-    if (Object.keys(errors).length === 0) {
-      console.log("Form data:", formData);
-    } else {
-      setErrors(errors);
-      setisSubmit(true);
-    }
     setisSubmit(true);
     console.log("before API")
-    if(Object.keys(setErrors).length==0 && isSubmit==false)
+    if(Object.keys(errors).length==0 && isSubmit==true)
     {
       console.log(formData)
       axios.post("http://localhost:5000/user/login",formData).then((Response)=>{
@@ -57,12 +50,18 @@ export default function Login() {
         console.log(Response.data.message);
        console.log(Response.data.datas);
         console.log(Response.data.status);
-       localStorage.setItem("userData", JSON.stringify(Response.data.datas));
-        console.log(localStorage.getItem("userData"))
-        toast.success("Login successful");
+       //localStorage.setItem("userData", JSON.stringify(Response.data.datas));
+        //console.log(localStorage.getItem("userData"))
+        localStorage.removeItem("userData")
+        toast.success
+        (Response.data.message)
+        alert("Login successful");
+        console.log("before router");
         router.push("/webBuilder")
+        
       }).catch((error)=>{
-        toast.success(error)
+        toast.error('login fail')
+        // alert("login fail")
         console.log(error)
       })
     }
@@ -74,9 +73,10 @@ export default function Login() {
       <div className={styles.login_container}>
         <form className={styles.login_form} onSubmit={handleSubmit}>
           <h2>Login</h2>
+          <Toaster/>
           <div className={styles.form_group}>
             <label className={styles.ladels} htmlFor="username">
-              Username:
+              Username or Email:
             </label>
             <input
               type="text"
@@ -112,11 +112,6 @@ export default function Login() {
           <button className={styles.buttons} type="submit">
             Login
           </button>
-          <p className={styles.link}>
-            <a href="#" className={styles.as}>
-              Forgot Username?
-            </a>
-          </p>
           <p className={styles.link}>
             <a  className={styles.as} onClick={()=>router.push('/forgetPassword')}>
               Forgot Password?

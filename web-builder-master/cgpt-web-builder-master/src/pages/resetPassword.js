@@ -66,12 +66,12 @@ export default function resetPassword() {
         .post("http://localhost:5000/user/resetPassword", reset)
         .then((response) => {
           console.log("Response:", response);
-          toast.success("Password reset successful");
+          alert("Password reset successful");
           router.push("/");
         })
         .catch((error) => {
           console.error("Reset password error:", error);
-          toast.error("Failed to reset password");
+          alert("Failed to reset password");
         });
     } else {
       setErrors(errors);

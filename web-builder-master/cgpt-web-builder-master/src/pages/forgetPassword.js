@@ -49,7 +49,7 @@ export default function ForgetPassword() {
       });
       axios.post("http://localhost:5000/user/forgetPassword", { email })
         .then((response) => {
-          toast.success("Registration comp");
+          alert("Email verified");
           console.log(response.data.message);
           router.push("/resetPassword");
         })
