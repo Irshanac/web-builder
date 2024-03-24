@@ -1,7 +1,7 @@
-import React, { useState,useEffect } from "react";
-import toast, { Toaster } from 'react-hot-toast';
+import React, { useState, useEffect } from "react";
+import toast, { Toaster } from "react-hot-toast";
 import styles from "./registration.module.css";
-import { useRouter } from 'next/router';
+import { useRouter } from "next/router";
 import axios from "axios";
 export default function Login() {
   const [formData, setFormData] = useState({
@@ -10,8 +10,6 @@ export default function Login() {
   });
 
   const [errors, setErrors] = useState({});
-  const [isSubmit,setisSubmit]=useState(false);
-  
   const router = useRouter();
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -19,7 +17,6 @@ export default function Login() {
       ...formData,
       [name]: value,
     });
-    
   };
   const handleFocus = (name) => {
     // Clear the error message for the focused field
@@ -31,7 +28,6 @@ export default function Login() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
     // Validate form data
     const errors = {};
     if (!formData.username.trim()) {
@@ -40,32 +36,21 @@ export default function Login() {
     if (!formData.password.trim()) {
       errors.password = "Password is required";
     }
-    setisSubmit(true);
-    console.log("before API")
-    if(Object.keys(errors).length==0 && isSubmit==true)
-    {
-      console.log(formData)
-      axios.post("http://localhost:5000/user/login",formData).then((Response)=>{
-        console.log(Response);
-        console.log(Response.data.message);
-       console.log(Response.data.datas);
-        console.log(Response.data.status);
-       //localStorage.setItem("userData", JSON.stringify(Response.data.datas));
-        //console.log(localStorage.getItem("userData"))
-        localStorage.removeItem("userData")
-        toast.success
-        (Response.data.message)
-        alert("Login successful");
-        console.log("before router");
-        router.push("/webBuilder")
-        
-      }).catch((error)=>{
-        toast.error('login fail')
-        // alert("login fail")
-        console.log(error)
-      })
+    setErrors(errors);
+    console.log("before API");
+    if (Object.keys(errors).length == 0) {
+      console.log(formData);
+      axios
+        .post("http://localhost:5000/user/login", formData)
+        .then((Response) => {
+          toast.success(Response.data.message);
+          localStorage.setItem("userData", Response.data.datas);
+          router.push("/webBuilder");
+        })
+        .catch((error) => {
+          toast.error(error.response.data.message);
+        });
     }
-
   };
 
   return (
@@ -73,7 +58,7 @@ export default function Login() {
       <div className={styles.login_container}>
         <form className={styles.login_form} onSubmit={handleSubmit}>
           <h2>Login</h2>
-          <Toaster/>
+          <Toaster />
           <div className={styles.form_group}>
             <label className={styles.ladels} htmlFor="username">
               Username or Email:
@@ -87,10 +72,9 @@ export default function Login() {
               onFocus={() => handleFocus("username")}
             />
 
-          {errors.username && (
-      <span   className={styles.error}>{errors.username}</span>
-)}
-
+            {errors.username && (
+              <span className={styles.error}>{errors.username}</span>
+            )}
           </div>
           <div className={styles.form_group}>
             <label className={styles.ladels} htmlFor="password">
@@ -104,22 +88,27 @@ export default function Login() {
               onChange={handleChange}
               onFocus={() => handleFocus("password")}
             />
-           {errors.password &&  (
-  <span  className={styles.error}>{errors.password}</span>
-)}
-
+            {errors.password && (
+              <span className={styles.error}>{errors.password}</span>
+            )}
           </div>
           <button className={styles.buttons} type="submit">
             Login
           </button>
           <p className={styles.link}>
-            <a  className={styles.as} onClick={()=>router.push('/forgetPassword')}>
+            <a
+              className={styles.as}
+              onClick={() => router.push("/forgetPassword")}
+            >
               Forgot Password?
             </a>
           </p>
           <p className={styles.link}>
             Don't have an account?{" "}
-            <a  className={styles.as} onClick={() => router.push('/registration')}>
+            <a
+              className={styles.as}
+              onClick={() => router.push("/registration")}
+            >
               Register
             </a>
           </p>

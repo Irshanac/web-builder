@@ -27,7 +27,7 @@ const Generator = () => {
 
   const handleMovedHistory = (movedHistoryValue) => {
     setMovedHistory(movedHistoryValue);
-    setDescription({ query: movedHistoryValue });
+    setDescription({ ...description, query: movedHistoryValue });
   };
 
   const printDescription = () => {
@@ -40,7 +40,10 @@ const Generator = () => {
 
     if (Object.keys(newErrors).length === 0) {
       setHistory([...history, description]);
-      localStorage.setItem("storeHistory", JSON.stringify([...history, description]));
+      localStorage.setItem(
+        "storeHistory",
+        JSON.stringify([...history, description])
+      );
       setLoad(description);
       setDescription({ query: "" });
     } else {
@@ -52,17 +55,22 @@ const Generator = () => {
     <Container>
       <Textarea
         placeholder="Write what you want to build"
-        onChange={store}
+        onChange={store} // Add onChange handler to update state
         name="query"
         id="query"
         value={description.query}
         onFocus={handleFocus}
-      ></Textarea><br></br>
+      />
+      <br/>
       {errors.query && <span className={styles.error}>{errors.query}</span>}
       <ButtonGroup>
         <button onClick={printDescription}>Generate</button>
       </ButtonGroup>
-      <History setHistory={setHistory} onMoveHistory={handleMovedHistory} reload={load} />
+      <History
+        setHistory={setHistory}
+        onMoveHistory={handleMovedHistory}
+        reload={load}
+      />
     </Container>
   );
 };

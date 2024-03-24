@@ -101,3 +101,10 @@
 .error{
   color: red;
 }
+.otpEnter{
+  width: calc(100% - 20px);
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  border-color:blue;
+}

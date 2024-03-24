@@ -1,0 +1,16 @@
+.circle{
+    margin-right: 0;
+
+}
+.logout{
+    border: none;
+    border-radius: 50px;
+    width: 50px;
+    height: 50px;
+    margin-top: 1%;
+    margin-left: 90%;
+}
+.logout:hover{
+    background-color: rgb(230, 180, 180);
+    color: rgb(14, 1, 1);
+}

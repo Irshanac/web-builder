@@ -2,16 +2,17 @@ import React, { useState } from "react";
 import styles from "./registration.module.css";
 import { useRouter } from "next/router";
 import axios from "axios";
-import { toast } from 'react-hot-toast';
+import toast, { Toaster } from 'react-hot-toast';
+
 export default function ForgetPassword() {
   const [formData, setFormData] = useState({
     email: '',
   });
 
   const [errors, setErrors] = useState({}); 
-  const [isSubmit,setisSubmit]=useState(false);
+  const [message, setMessage] = useState('');
+  
   const router = useRouter();
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -27,7 +28,8 @@ export default function ForgetPassword() {
       [name]: "",
     });
   };
-  const handleSubmit = (e) => {
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
   
     // Validate form data
@@ -39,31 +41,25 @@ export default function ForgetPassword() {
     }
   
     if (Object.keys(errors).length === 0) {
-      const email = formData.email;// Declare email variable
-      const emailstore=localStorage.getItem("email")
-      if(email!==emailstore){
-        localStorage.setItem("email", JSON.stringify(email));
+      const email = formData.email;
+      localStorage.setItem("email", JSON.stringify(email));
+      
+      try {
+        const response = await axios.post("http://localhost:5000/user/generateOTP", { email });
+        toast.success(response.data.message);
+        router.push("/verifyEmail");
+      } catch (error) {
+        toast.error(error.message);
       }
-      setFormData({
-        email: '',
-      });
-      axios.post("http://localhost:5000/user/forgetPassword", { email })
-        .then((response) => {
-          alert("Email verified");
-          console.log(response.data.message);
-          router.push("/resetPassword");
-        })
-        .catch((error) => {
-          toast.error(error.message);
-        });
     } else {
       setErrors(errors);
-      setisSubmit(true);
     }
-  
   };
 
+ 
+
   return (
+
     <div className={styles.bods}>
       <div className={styles.login_container}>
         <form className={styles.login_form} onSubmit={handleSubmit}>
@@ -73,6 +69,7 @@ export default function ForgetPassword() {
           >
             ←
           </a>
+          <Toaster/>
           <h2>Forgot password</h2>
           <div className={styles.form_group}>
             <label className={styles.ladels} htmlFor="email">
@@ -96,7 +93,9 @@ export default function ForgetPassword() {
               Submit
             </button>
           </p>
+        
         </form>
+        
       </div>
     </div>
   );

@@ -6,6 +6,7 @@ import Login from "./Login";
 import History from "@/componets/History";
 import { AppContext } from "@/context/AppContext";
 import { extractCode, updatePreview } from "@/utils/helpers";
+import Logout from "./Logout";
 
 const Editor = () => {
   const [history, sethistory] = useState();
@@ -44,6 +45,7 @@ const Editor = () => {
           />
         </ColumnContainer>
       </Container>
+     
     </EditorContainer>
     
   );

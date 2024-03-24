@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { toast } from "react-hot-toast";
+import  toast ,{Toaster} from "react-hot-toast";
 import styles from "./registration.module.css";
 import { useRouter } from "next/router";
 import axios from "axios";
@@ -49,29 +49,25 @@ export default function resetPassword() {
     if (formData.password !== formData.Cpassword) {
       errors.Cpassword = "Passwords do not match";
     }
+    setErrors(errors);
   
     if (Object.keys(errors).length === 0) {
       const password = formData.password;
       const email = localStorage.getItem("email");
       const reset = { password, email };
+      console.log(reset)
       localStorage.removeItem("email");
-  
-      // Clear form data after successful registration
-      setFormData({
-        password: "",
-        Cpassword: "",
-      });
   
       axios
         .post("http://localhost:5000/user/resetPassword", reset)
         .then((response) => {
-          console.log("Response:", response);
-          alert("Password reset successful");
-          router.push("/");
+          console.log(response.data);
+          toast.success(response.data.message)
+          router.push("/login");
         })
         .catch((error) => {
-          console.error("Reset password error:", error);
-          alert("Failed to reset password");
+          //console.error("Reset password error:", error);
+          toast.error(error.message);
         });
     } else {
       setErrors(errors);
@@ -84,7 +80,7 @@ export default function resetPassword() {
       <div className={styles.login_container}>
         <form className={styles.login_form} onSubmit={handleSubmit}>
           <h2>Reset Password</h2>
-
+          < Toaster/>
           <div className={styles.form_group}>
             <label className={styles.ladels} htmlFor="email">
               Password:
